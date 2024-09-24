@@ -14,3 +14,4 @@ CMakeUserPresets.json
 # Custom ignore patterns
 device_*.json
 device_config.h
+build/
