@@ -13,6 +13,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Include directories
 target_include_directories(bytebeam_firmware_sdk PUBLIC include)
+target_include_directories(bytebeam_firmware_sdk PUBLIC external/cJSON)
 
 # Set output name to ensure .a extension
 set_target_properties(bytebeam_firmware_sdk PROPERTIES OUTPUT_NAME "bytebeam_firmware_sdk")
