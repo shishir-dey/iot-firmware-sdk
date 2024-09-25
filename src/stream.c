@@ -1,7 +1,5 @@
-#include "bytebeam/custom_types.h"
+#include "bytebeam/stream.h"
 #include "cJSON.h"
-
-typedef cJSON stream;
 
 stream* stream_create()
 {

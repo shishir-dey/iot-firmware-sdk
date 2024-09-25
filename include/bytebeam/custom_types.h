@@ -1,5 +1,5 @@
-#ifndef CUSTOM_TYPES_H
-#define CUSTOM_TYPES_H
+#ifndef BYTEBEAM_CUSTOM_TYPES_H
+#define BYTEBEAM_CUSTOM_TYPES_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -21,4 +21,4 @@ typedef uint64_t bb_timestamp_t;
 typedef uint64_t bb_timestamp_ms_t;
 typedef uint64_t bb_timestamp_us_t;
 
-#endif /* CUSTOM_TYPES_H */
+#endif /* BYTEBEAM_CUSTOM_TYPES_H */
