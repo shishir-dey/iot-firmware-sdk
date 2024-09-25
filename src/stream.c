@@ -1,8 +1,10 @@
 #include "bytebeam/stream.h"
+#include <stdlib.h>
+#include <string.h>
 
 stream* stream_create(const char* name)
 {
-    stream* handle = (stream*)malloc(sizeof(stream));
+    stream* handle = malloc(sizeof(stream));
     handle->obj = cJSON_CreateObject();
     strncpy(handle->name, name, STREAM_NAME_MAX_LEN);
     return handle;
