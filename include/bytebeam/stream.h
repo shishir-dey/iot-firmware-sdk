@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include "cJSON.h"
 #include "bytebeam/custom_types.h"
 
 #define STREAM_NAME_MAX_LEN 32

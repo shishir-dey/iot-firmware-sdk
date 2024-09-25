@@ -1,5 +1,4 @@
 #include "bytebeam/stream.h"
-#include "cJSON.h"
 
 stream* stream_create(const char* name)
 {
