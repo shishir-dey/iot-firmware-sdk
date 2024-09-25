@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <time.h>
 
 typedef bool bb_bool_t;
 typedef float bb_float32_t;
@@ -17,9 +16,9 @@ typedef uint16_t bb_uint16_t;
 typedef uint32_t bb_uint32_t;
 typedef uint64_t bb_uint64_t;
 typedef char* bb_string_t;
-typedef int64_t bb_datetime64_t;
-typedef int64_t bb_timestamp_t;
-typedef int64_t bb_timestamp_ms_t;
-typedef int64_t bb_timestamp_us_t;
+typedef uint64_t bb_datetime64_t;
+typedef uint64_t bb_timestamp_t;
+typedef uint64_t bb_timestamp_ms_t;
+typedef uint64_t bb_timestamp_us_t;
 
 #endif /* CUSTOM_TYPES_H */
