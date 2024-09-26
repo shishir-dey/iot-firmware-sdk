@@ -7,53 +7,84 @@ project(bytebeam-firmware-sdk VERSION 0.1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-# Include directories for external libraries
-include_directories(include external/cJSON)
+# Define library and executable output directories
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Add external library subdirectories
-add_subdirectory(external/cJSON)
-add_subdirectory(external/mbedtls)
+# Define the SDK library
+add_library(bytebeam_firmware_sdk STATIC
+    src/stream.c
+    src/mqtt_client.c
+)
 
-# CoreMQTT sources (manual addition due to lack of CMakeLists.txt)
+# bytebeam-firmware-sdk include directories
+target_include_directories(bytebeam_firmware_sdk PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/config
+    ${CMAKE_CURRENT_SOURCE_DIR}/portable
+)
+
+# CoreMQTT
 set(CORE_MQTT_SOURCES
     external/coreMQTT/source/core_mqtt.c
     external/coreMQTT/source/core_mqtt_state.c
     external/coreMQTT/source/core_mqtt_serializer.c
 )
-
-# Create a static library
-add_library(bytebeam_firmware_sdk STATIC
-    src/stream.c
-    src/mqtt_client.c
-    ${CORE_MQTT_SOURCES}  # Include CoreMQTT sources
-)
-
-# Add config directory to include path
-target_include_directories(bytebeam_firmware_sdk PUBLIC 
-    ${CMAKE_CURRENT_SOURCE_DIR}/config
-)
-
-# Add CoreMQTT include directories
 target_include_directories(bytebeam_firmware_sdk PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/external/coreMQTT/source/include
     ${CMAKE_CURRENT_SOURCE_DIR}/external/coreMQTT/source/interface
 )
+target_sources(bytebeam_firmware_sdk PRIVATE ${CORE_MQTT_SOURCES})
 
-# Link against external libraries
-target_link_libraries(bytebeam_firmware_sdk PUBLIC 
-    cJSON 
-    mbedtls
+# cJSON configuration
+set(ENABLE_CJSON_TEST OFF CACHE BOOL "Disable building cJSON test")
+add_subdirectory(external/cJSON)
+target_include_directories(bytebeam_firmware_sdk PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/cJSON
+)
+set_target_properties(cjson PROPERTIES COMPILE_FLAGS "-Wno-error")
+set_target_properties(cjson PROPERTIES COMPILE_FLAGS "-Wno-float-conversion")
+
+# mbedTLS configuration
+set(ENABLE_PROGRAMS OFF CACHE BOOL "Build mbed TLS programs.")
+set(ENABLE_TESTING OFF CACHE BOOL "Build mbed TLS tests.")
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build mbed TLS shared library.")
+add_subdirectory(external/mbedtls)
+target_link_libraries(bytebeam_firmware_sdk mbedtls mbedx509 mbedcrypto)
+
+# examples/
+if(WIN32)
+    set(PLATFORM_SOURCES platform/Win32/platform_win32_port.c)
+    target_include_directories(bytebeam_firmware_sdk PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/platform/Win32
+        ${CMAKE_CURRENT_SOURCE_DIR}/portable
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/bytebeam
+    )
+else()
+    set(PLATFORM_SOURCES "")
+endif()
+
+# Create an example executable for bytebeam_stream_publish
+add_executable(bytebeam_stream_publish
+    examples/bytebeam_stream_publish.c
+    ${PLATFORM_SOURCES}
 )
 
-# Remove -Werror flag from cJSON compilation
-set_target_properties(cjson PROPERTIES COMPILE_FLAGS "-Wno-error")
+# Link the example with the SDK library
+target_link_libraries(bytebeam_stream_publish bytebeam_firmware_sdk)
 
-# Set output name to ensure .a extension
-set_target_properties(bytebeam_firmware_sdk PROPERTIES OUTPUT_NAME "bytebeam_firmware_sdk")
+# Set the output directory for the example executable
+set_target_properties(bytebeam_stream_publish PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
+)
 
-# Install rules
+# Install rules for SDK and example
 install(TARGETS bytebeam_firmware_sdk
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     PUBLIC_HEADER DESTINATION include
+)
+install(TARGETS bytebeam_stream_publish
+    RUNTIME DESTINATION bin
 )
