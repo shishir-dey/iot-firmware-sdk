@@ -1,4 +1,12 @@
-#include "device_config.h"
+#ifdef __has_include
+    #if __has_include("device_config.h")
+        #include "device_config.h"
+    #else
+        #include "template_device_config.h"
+    #endif
+#else
+    #include "template_device_config.h"
+#endif
 #include "mqtt_client.h"
 #include "transport.h"
 #include <stdio.h>
