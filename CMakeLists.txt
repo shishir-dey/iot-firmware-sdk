@@ -53,38 +53,38 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build mbed TLS shared library.")
 add_subdirectory(external/mbedtls)
 target_link_libraries(bytebeam_firmware_sdk mbedtls mbedx509 mbedcrypto)
 
-# examples/
-if(WIN32)
-    set(PLATFORM_SOURCES platform/Win32/platform_win32_port.c)
-    target_include_directories(bytebeam_firmware_sdk PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/platform/Win32
-        ${CMAKE_CURRENT_SOURCE_DIR}/portable
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/bytebeam
-    )
-else()
-    set(PLATFORM_SOURCES "")
-endif()
-
-# Create an example executable for bytebeam_stream_publish
-add_executable(bytebeam_stream_publish
-    examples/bytebeam_stream_publish.c
-    ${PLATFORM_SOURCES}
-)
-
-# Link the example with the SDK library
-target_link_libraries(bytebeam_stream_publish bytebeam_firmware_sdk)
-
-# Set the output directory for the example executable
-set_target_properties(bytebeam_stream_publish PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
-)
-
 # Install rules for SDK and example
 install(TARGETS bytebeam_firmware_sdk
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     PUBLIC_HEADER DESTINATION include
 )
-install(TARGETS bytebeam_stream_publish
-    RUNTIME DESTINATION bin
-)
+
+# Build the examples if host is Windows
+if(WIN32)
+    set(PLATFORM_SOURCES platform/Win32/platform_win32_port.c)
+
+    target_include_directories(bytebeam_firmware_sdk PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/platform/Win32
+        ${CMAKE_CURRENT_SOURCE_DIR}/portable
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/bytebeam
+    )
+
+    add_executable(bytebeam_stream_publish
+        examples/bytebeam_stream_publish.c
+        ${PLATFORM_SOURCES}
+    )
+
+    target_link_libraries(bytebeam_stream_publish bytebeam_firmware_sdk)
+
+    set_target_properties(bytebeam_stream_publish PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
+    )
+
+    install(TARGETS bytebeam_stream_publish
+        RUNTIME DESTINATION bin
+    )
+
+else()
+    set(PLATFORM_SOURCES "")
+endif()
