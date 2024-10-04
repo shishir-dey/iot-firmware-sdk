@@ -2,6 +2,31 @@
 #define BYTEBEAM_MQTT_CLIENT_H
 
 #include "bytebeam/custom_types.h"
+#include "core_mqtt.h"
+#include "mbedtls/ctr_drbg.h"
+#include "mbedtls/debug.h"
+#include "mbedtls/entropy.h"
+#include "mbedtls/error.h"
+#include "mbedtls/net_sockets.h"
+#include "mbedtls/pk.h"
+#include "mbedtls/ssl.h"
+
+#define MQTT_BUFFER_SIZE 1024
+
+typedef struct {
+    MQTTContext_t mqtt_context;
+    mbedtls_ssl_context ssl_context;
+    mbedtls_net_context net_context;
+    mbedtls_ssl_config ssl_config;
+    mbedtls_x509_crt ca_cert;
+    mbedtls_x509_crt client_cert;
+    mbedtls_pk_context client_key;
+    mbedtls_entropy_context entropy;
+    mbedtls_ctr_drbg_context ctr_drbg;
+    uint8_t network_buffer[MQTT_BUFFER_SIZE];
+    uint8_t fixed_buffer[MQTT_BUFFER_SIZE];
+    void* transport_ctx;
+} MQTTClientContext;
 
 /**
  * @brief Initialize the MQTT client

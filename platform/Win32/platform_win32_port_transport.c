@@ -11,7 +11,7 @@ typedef struct {
     SOCKET sock;
 } socket_context;
 
-int port_open(void** ctx, const char* host, const char* port)
+int port_transport_open(void** ctx, const char* host, const char* port)
 {
     WSADATA wsaData;
     struct addrinfo hints, *res;
@@ -57,7 +57,7 @@ int port_open(void** ctx, const char* host, const char* port)
     return 0;
 }
 
-void port_close(void* ctx)
+void port_transport_close(void* ctx)
 {
     socket_context* sock_ctx = (socket_context*)ctx;
     if (sock_ctx) {
@@ -67,7 +67,7 @@ void port_close(void* ctx)
     WSACleanup();
 }
 
-int port_ssl_send(void* ctx, const unsigned char* buf, size_t len)
+int port_transport_send(void* ctx, const unsigned char* buf, size_t len)
 {
     socket_context* sock_ctx = (socket_context*)ctx;
     int total_sent = 0;
@@ -88,7 +88,7 @@ int port_ssl_send(void* ctx, const unsigned char* buf, size_t len)
     return total_sent;
 }
 
-int port_ssl_recv(void* ctx, unsigned char* buf, size_t len)
+int port_transport_recv(void* ctx, unsigned char* buf, size_t len)
 {
     socket_context* sock_ctx = (socket_context*)ctx;
     int total_received = 0;
