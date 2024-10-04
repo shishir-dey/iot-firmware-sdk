@@ -16,6 +16,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 add_library(bytebeam_firmware_sdk STATIC
     src/stream.c
     src/mqtt_client.c
+    src/mqtt_client_port.c
 )
 
 # bytebeam-firmware-sdk include directories
@@ -62,13 +63,17 @@ install(TARGETS bytebeam_firmware_sdk
 
 # Build the examples if host is Windows
 if(WIN32)
-    set(PLATFORM_SOURCES platform/Win32/platform_win32_port_clock.c)
-    set(PLATFORM_SOURCES platform/Win32/platform_win32_port_transport.c)
-
+    set(PLATFORM_SOURCES
+        platform/Win32/platform_win32_port_clock.c
+        platform/Win32/platform_win32_port_transport.c
+        external/cJSON/cJSON.c
+    )
+    
     target_include_directories(bytebeam_firmware_sdk PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/platform/Win32
         ${CMAKE_CURRENT_SOURCE_DIR}/portable
         ${CMAKE_CURRENT_SOURCE_DIR}/include/bytebeam
+        ${CMAKE_CURRENT_SOURCE_DIR}/external/cJSON
     )
 
     add_executable(bytebeam_stream_publish

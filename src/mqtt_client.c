@@ -1,47 +1,19 @@
-#include "core_mqtt.h"
-#include "mbedtls/ctr_drbg.h"
-#include "mbedtls/debug.h"
-#include "mbedtls/entropy.h"
-#include "mbedtls/error.h"
-#include "mbedtls/net_sockets.h"
-#include "mbedtls/pk.h"
-#include "mbedtls/ssl.h"
+#include "mqtt_client.h"
+#include "mqtt_client_port.h"
 #include "transport.h"
 #include <stdio.h>
 #include <string.h>
 
-#define MQTT_BUFFER_SIZE 1024
-
-typedef struct {
-    MQTTContext_t mqtt_context;
-    mbedtls_ssl_context ssl_context;
-    mbedtls_net_context net_context;
-    mbedtls_ssl_config ssl_config;
-    mbedtls_x509_crt ca_cert;
-    mbedtls_x509_crt client_cert;
-    mbedtls_pk_context client_key;
-    mbedtls_entropy_context entropy;
-    mbedtls_ctr_drbg_context ctr_drbg;
-    uint8_t network_buffer[MQTT_BUFFER_SIZE];
-    uint8_t fixed_buffer[MQTT_BUFFER_SIZE];
-    void* transport_ctx;
-} MQTTClientContext;
-
 static MQTTClientContext client_context;
+
+MQTTClientContext* get_mqtt_client_context()
+{
+    return &client_context;
+}
 
 void debug(void* ctx, int level, const char* file, int line, const char* str)
 {
     printf("%s:%04d: %s", file, line, str);
-}
-
-static int network_send(NetworkContext_t* pNetworkContext, const void* pBuffer, size_t bytesToSend)
-{
-    return mbedtls_ssl_write(&client_context.ssl_context, pBuffer, bytesToSend);
-}
-
-static int network_recv(NetworkContext_t* pNetworkContext, void* pBuffer, size_t bytesToRecv)
-{
-    return mbedtls_ssl_read(&client_context.ssl_context, pBuffer, bytesToRecv);
 }
 
 static int check_private_key(mbedtls_pk_context* client_key)
@@ -53,12 +25,6 @@ static int check_private_key(mbedtls_pk_context* client_key)
         ret = 0;
     }
     return ret;
-}
-
-uint32_t get_current_time(void)
-{
-    // TODO: Implement actual time retrieval
-    return 0;
 }
 
 void mqtt_event_callback(MQTTContext_t* pMqttContext, MQTTPacketInfo_t* pPacketInfo, MQTTDeserializedInfo_t* pDeserializedInfo)
