@@ -96,7 +96,7 @@ int mqtt_connect(const char* host, int port, const char* client_id, const char* 
     char port_str[6];
     sprintf(port_str, "%d", port);
 
-    ret = port_open(&client_context.transport_ctx, host, port_str);
+    ret = port_transport_open(&client_context.transport_ctx, host, port_str);
     if (ret != 0) {
         return ret;
     }
@@ -113,20 +113,20 @@ int mqtt_connect(const char* host, int port, const char* client_id, const char* 
     ret = mbedtls_ctr_drbg_seed(&client_context.ctr_drbg, mbedtls_entropy_func, &client_context.entropy, NULL, 0);
     if (ret != 0) {
         printf("mbedtls_ctr_drbg_seed returned: %d\n", ret);
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
     ret = mbedtls_net_connect(&client_context.net_context, host, port_str, MBEDTLS_NET_PROTO_TCP);
     if (ret != 0) {
         printf("mbedtls_net_connect returned: %d\n", ret);
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
     ret = mbedtls_ssl_config_defaults(&client_context.ssl_config, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT);
     if (ret != 0) {
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
@@ -139,27 +139,27 @@ int mqtt_connect(const char* host, int port, const char* client_id, const char* 
     ret = mbedtls_x509_crt_parse(&client_context.ca_cert, (const unsigned char*)root_ca, strlen(root_ca) + 1);
     if (ret != 0) {
         printf("Failed to parse CA certificate: %d\n", ret);
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
     ret = mbedtls_x509_crt_parse(&client_context.client_cert, (const unsigned char*)client_cert, strlen(client_cert) + 1);
     if (ret != 0) {
         printf("Failed to parse client certificate: %d\n", ret);
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
     ret = mbedtls_pk_parse_key(&client_context.client_key, (const unsigned char*)private_key, strlen(private_key) + 1, NULL, 0, mbedtls_ctr_drbg_random, &client_context.ctr_drbg);
     if (ret != 0) {
         printf("Failed to parse client private key: %d\n", ret);
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
     ret = check_private_key(&client_context.client_key);
     if (ret != 0) {
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
@@ -170,25 +170,25 @@ int mqtt_connect(const char* host, int port, const char* client_id, const char* 
     ret = mbedtls_ssl_conf_own_cert(&client_context.ssl_config, &client_context.client_cert, &client_context.client_key);
     if (ret != 0) {
         printf("mbedtls_ssl_conf_own_cert returned: %d\n", ret);
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
     ret = mbedtls_ssl_setup(&client_context.ssl_context, &client_context.ssl_config);
     if (ret != 0) {
         printf("mbedtls_ssl_setup returned: %d\n", ret);
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
     ret = mbedtls_ssl_set_hostname(&client_context.ssl_context, host);
     if (ret != 0) {
         printf("mbedtls_ssl_set_hostname returned: %d\n", ret);
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
-    mbedtls_ssl_set_bio(&client_context.ssl_context, &client_context.net_context, port_ssl_send, port_ssl_recv, NULL);
+    mbedtls_ssl_set_bio(&client_context.ssl_context, &client_context.net_context, port_transport_send, port_transport_recv, NULL);
 
     while ((ret = mbedtls_ssl_handshake(&client_context.ssl_context)) != 0) {
         if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE) {
@@ -197,7 +197,7 @@ int mqtt_connect(const char* host, int port, const char* client_id, const char* 
             mbedtls_strerror(ret, error_buf, sizeof(error_buf));
             printf("mbedtls_ssl_handshake failed with error: %x - %s\n", ret, error_buf);
 
-            port_close(client_context.transport_ctx);
+            port_transport_close(client_context.transport_ctx);
             return ret;
         }
     }
@@ -236,7 +236,7 @@ int mqtt_connect(const char* host, int port, const char* client_id, const char* 
         } else {
             printf("Unexpected error in MQTT_Connect\n");
         }
-        port_close(client_context.transport_ctx);
+        port_transport_close(client_context.transport_ctx);
         return ret;
     }
 
@@ -257,7 +257,7 @@ int mqtt_disconnect()
     mbedtls_entropy_free(&client_context.entropy);
     mbedtls_ctr_drbg_free(&client_context.ctr_drbg);
 
-    port_close(client_context.transport_ctx);
+    port_transport_close(client_context.transport_ctx);
     return ret;
 }
 

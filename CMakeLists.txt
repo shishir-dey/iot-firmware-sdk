@@ -62,7 +62,8 @@ install(TARGETS bytebeam_firmware_sdk
 
 # Build the examples if host is Windows
 if(WIN32)
-    set(PLATFORM_SOURCES platform/Win32/platform_win32_port.c)
+    set(PLATFORM_SOURCES platform/Win32/platform_win32_port_clock.c)
+    set(PLATFORM_SOURCES platform/Win32/platform_win32_port_transport.c)
 
     target_include_directories(bytebeam_firmware_sdk PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/platform/Win32
