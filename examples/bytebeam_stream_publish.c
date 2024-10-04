@@ -9,7 +9,7 @@
 #endif
 #include "clock.h"
 #include "mqtt_client.h"
-#include "stream.h"
+#include "bytebeam/stream.h"
 #include "transport.h"
 #include <stdio.h>
 #include <string.h>

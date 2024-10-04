@@ -1,5 +1,5 @@
-#include "mqtt_client.h"
-#include "mqtt_client_port.h"
+#include "bytebeam/mqtt_client.h"
+#include "bytebeam/mqtt_client_port.h"
 #include "transport.h"
 #include <stdio.h>
 #include <string.h>
