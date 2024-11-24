@@ -7,16 +7,16 @@
 #else
 #include "template_device_config.h"
 #endif
-#include "bytebeam/mqtt_client.h"
-#include "bytebeam/stream.h"
 #include "clock.h"
+#include "iot/mqtt_client.h"
+#include "iot/stream.h"
 #include "transport.h"
 #include <stdio.h>
 #include <string.h>
 
 int main()
 {
-    printf("Starting Bytebeam Stream Publish Example\n");
+    printf("Starting Stream Publish Example\n");
 
     /* Initialize the MQTT client */
     mqtt_init();

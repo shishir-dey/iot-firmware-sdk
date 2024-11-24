@@ -1,8 +1,8 @@
-#ifndef BYTEBEAM_MQTT_CLIENT_H
-#define BYTEBEAM_MQTT_CLIENT_H
+#ifndef IOT_MQTT_CLIENT_H
+#define IOT_MQTT_CLIENT_H
 
-#include "bytebeam/custom_types.h"
 #include "core_mqtt.h"
+#include "iot/custom_types.h"
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/debug.h"
 #include "mbedtls/entropy.h"
@@ -106,4 +106,4 @@ int mqtt_set_client_key(const char* key_pem);
  */
 int mqtt_process();
 
-#endif /* BYTEBEAM_MQTT_CLIENT_H */
+#endif /* IOT_MQTT_CLIENT_H */

@@ -11,6 +11,6 @@ HTML_COLORSTYLE    = LIGHT
 CREATE_SUBDIRS     = NO
 GENERATE_LATEX     = NO
 
-PROJECT_NAME     = "bytebeam-firmware-sdk"
+PROJECT_NAME     = "iot-firmware-sdk"
 HTML_OUTPUT      = .
 INPUT            = src
