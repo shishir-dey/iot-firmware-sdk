@@ -2,7 +2,7 @@
 
 
 ## Build Status
-[![CMake on a single platform](https://github.com/shishir-dey/iot-firmware-sdk/actions/workflows/cmake-single-platform.yml/badge.svg?branch=main)](https://github.com/shishir-dey/iot-firmware-sdk/actions/workflows/cmake-single-platform.yml)
+[![CMake on a single platform](https://github.com/shishir-dey/iot-firmware-sdk/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/shishir-dey/iot-firmware-sdk/actions/workflows/cmake-single-platform.yml)
 
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
