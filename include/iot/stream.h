@@ -1,12 +1,12 @@
-#ifndef BYTEBEAM_STREAM_H
-#define BYTEBEAM_STREAM_H
+#ifndef IOT_STREAM_H
+#define IOT_STREAM_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "bytebeam/custom_types.h"
 #include "cJSON.h"
+#include "iot/custom_types.h"
 
 #define STREAM_NAME_MAX_LEN 32
 
@@ -145,4 +145,4 @@ void stream_delete(stream_t* handle);
 }
 #endif
 
-#endif /* BYTEBEAM_STREAM_H */
+#endif /* IOT_STREAM_H */
