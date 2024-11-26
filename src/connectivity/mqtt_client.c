@@ -1,5 +1,5 @@
-#include "iot/mqtt_client.h"
-#include "iot/mqtt_client_port.h"
+#include "connectivity/mqtt_client.h"
+#include "connectivity/mqtt_client_port.h"
 #include "transport.h"
 #include <stdio.h>
 #include <string.h>
