@@ -1,5 +1,5 @@
-#include "iot/mqtt_client_port.h"
-#include "iot/mqtt_client.h"
+#include "connectivity/mqtt_client_port.h"
+#include "connectivity/mqtt_client.h"
 
 MQTTClientContext* get_mqtt_client_context();
 

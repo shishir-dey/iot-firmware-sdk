@@ -2,7 +2,6 @@
 #define IOT_MQTT_CLIENT_H
 
 #include "core_mqtt.h"
-#include "iot/custom_types.h"
 #include "mbedtls/ctr_drbg.h"
 #include "mbedtls/debug.h"
 #include "mbedtls/entropy.h"
@@ -64,7 +63,7 @@ int mqtt_disconnect();
  * @param qos Quality of Service level (0, 1, or 2)
  * @return int 0 on success, negative value on error
  */
-int mqtt_publish(const char* topic, const bb_uint8_t* payload, size_t payload_length, bb_uint8_t qos);
+int mqtt_publish(const char* topic, const uint8_t* payload, size_t payload_length, uint8_t qos);
 
 /**
  * @brief Subscribe to an MQTT topic
@@ -73,7 +72,7 @@ int mqtt_publish(const char* topic, const bb_uint8_t* payload, size_t payload_le
  * @param qos Quality of Service level (0, 1, or 2)
  * @return int 0 on success, negative value on error
  */
-int mqtt_subscribe(const char* topic, bb_uint8_t qos);
+int mqtt_subscribe(const char* topic, uint8_t qos);
 
 /**
  * @brief Set the root CA certificate for SSL/TLS connection

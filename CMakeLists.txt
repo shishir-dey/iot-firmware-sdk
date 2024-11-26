@@ -14,9 +14,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Define the SDK library
 add_library(iot_firmware_sdk STATIC
-    src/stream.c
-    src/mqtt_client.c
-    src/mqtt_client_port.c
+    src/data/internet_object.c
+    src/connectivity/mqtt_client.c
+    src/connectivity/mqtt_client_port.c
 )
 
 # iot-firmware-sdk include directories
@@ -62,35 +62,35 @@ install(TARGETS iot_firmware_sdk
 )
 
 # Build the examples if host is Windows
-if(WIN32)
-    set(PLATFORM_SOURCES
-        platform/Win32/platform_win32_port_clock.c
-        platform/Win32/platform_win32_port_transport.c
-        external/cJSON/cJSON.c
-    )
+# if(WIN32)
+#     set(PLATFORM_SOURCES
+#         platform/Win32/platform_win32_port_clock.c
+#         platform/Win32/platform_win32_port_transport.c
+#         external/cJSON/cJSON.c
+#     )
     
-    target_include_directories(iot_firmware_sdk PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/platform/Win32
-        ${CMAKE_CURRENT_SOURCE_DIR}/portable
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/iot
-        ${CMAKE_CURRENT_SOURCE_DIR}/external/cJSON
-    )
+#     target_include_directories(iot_firmware_sdk PUBLIC
+#         ${CMAKE_CURRENT_SOURCE_DIR}/platform/Win32
+#         ${CMAKE_CURRENT_SOURCE_DIR}/portable
+#         ${CMAKE_CURRENT_SOURCE_DIR}/include/iot
+#         ${CMAKE_CURRENT_SOURCE_DIR}/external/cJSON
+#     )
 
-    add_executable(stream_publish
-        examples/stream_publish.c
-        ${PLATFORM_SOURCES}
-    )
+#     add_executable(stream_publish
+#         examples/stream_publish.c
+#         ${PLATFORM_SOURCES}
+#     )
 
-    target_link_libraries(stream_publish iot_firmware_sdk)
+#     target_link_libraries(stream_publish iot_firmware_sdk)
 
-    set_target_properties(stream_publish PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
-    )
+#     set_target_properties(stream_publish PROPERTIES
+#         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
+#     )
 
-    install(TARGETS stream_publish
-        RUNTIME DESTINATION bin
-    )
+#     install(TARGETS stream_publish
+#         RUNTIME DESTINATION bin
+#     )
 
-else()
-    set(PLATFORM_SOURCES "")
-endif()
+# else()
+#     set(PLATFORM_SOURCES "")
+# endif()
