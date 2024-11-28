@@ -2,6 +2,7 @@
 
 
 ## Build Status
+[![Dependabot Updates](https://github.com/shishir-dey/iot-firmware-sdk/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/shishir-dey/iot-firmware-sdk/actions/workflows/dependabot/dependabot-updates)
 [![CMake on a single platform](https://github.com/shishir-dey/iot-firmware-sdk/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/shishir-dey/iot-firmware-sdk/actions/workflows/cmake-single-platform.yml)
 
 ## License
