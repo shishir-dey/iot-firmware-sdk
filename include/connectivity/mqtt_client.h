@@ -105,4 +105,32 @@ int mqtt_set_client_key(const char* key_pem);
  */
 int mqtt_process();
 
+/**
+ * @brief Portable transport send function for CoreMQTT IoT communications
+ *
+ * This is a portable implementation that can be used across different platforms.
+ * It sends data over the network using the configured transport layer for
+ * CoreMQTT communications.
+ *
+ * @param pNetworkContext Network context containing connection info
+ * @param pBuffer Buffer containing data to send
+ * @param bytesToSend Number of bytes to send
+ * @return int Number of bytes sent on success, negative value on error
+ */
+int coreMQTT_iot_transport_send(NetworkContext_t* pNetworkContext, const void* pBuffer, size_t bytesToSend);
+
+/**
+ * @brief Portable transport receive function for CoreMQTT IoT communications
+ *
+ * This is a portable implementation that can be used across different platforms.
+ * It receives data from the network using the configured transport layer for
+ * CoreMQTT communications.
+ *
+ * @param pNetworkContext Network context containing connection info
+ * @param pBuffer Buffer to store received data
+ * @param bytesToRecv Maximum number of bytes to receive
+ * @return int Number of bytes received on success, negative value on error
+ */
+int coreMQTT_iot_transport_recv(NetworkContext_t* pNetworkContext, void* pBuffer, size_t bytesToRecv);
+
 #endif /* IOT_MQTT_CLIENT_H */
