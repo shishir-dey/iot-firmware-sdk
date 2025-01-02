@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31.3)
+cmake_minimum_required(VERSION 3.31.2)
 
 # Project name and version
 project(iot-firmware-sdk VERSION 0.1.0 LANGUAGES C CXX)
