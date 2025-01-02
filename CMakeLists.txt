@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.31.3)
 
 # Project name and version
-project(iot-firmware-sdk VERSION 0.1.0 LANGUAGES C)
+project(iot-firmware-sdk VERSION 0.1.0 LANGUAGES C CXX)
 
 # Include dependency configurations
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies.cmake)
@@ -9,6 +9,12 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies.cmake)
 # Set C standard
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Define library and executable output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -42,3 +48,12 @@ install(TARGETS iot_firmware_sdk
     LIBRARY DESTINATION lib
     PUBLIC_HEADER DESTINATION include
 )
+
+# Add Google Test subdirectory
+add_subdirectory(external/googletest)
+
+# Enable testing
+enable_testing()
+
+# Add test directory
+add_subdirectory(tests/unit)

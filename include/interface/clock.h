@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Time unit enumeration
  */
@@ -20,34 +24,8 @@ enum iot_time_unit {
  */
 uint64_t iot_get_time(enum iot_time_unit unit);
 
-/**
- * @brief Get current time in microseconds
- *
- * @return uint64_t Current time in microseconds
- */
-static inline uint64_t iot_get_time_us(void)
-{
-    return iot_get_time(IOT_TIME_MICROSECONDS);
+#ifdef __cplusplus
 }
-
-/**
- * @brief Get current time in milliseconds
- *
- * @return uint64_t Current time in milliseconds
- */
-static inline uint64_t iot_get_time_ms(void)
-{
-    return iot_get_time(IOT_TIME_MILLISECONDS);
-}
-
-/**
- * @brief Get current timestamp in seconds
- *
- * @return uint64_t Current timestamp in seconds since epoch
- */
-static inline uint64_t iot_get_timestamp(void)
-{
-    return iot_get_time(IOT_TIME_SECONDS);
-}
+#endif
 
 #endif // IOT_CLOCK_H
