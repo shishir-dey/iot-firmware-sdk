@@ -34,7 +34,6 @@ add_library(iot_firmware_sdk STATIC ${SDK_SOURCES})
 target_include_directories(iot_firmware_sdk PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/config
-    ${CMAKE_CURRENT_SOURCE_DIR}/portable
 )
 
 # Configure external dependencies
