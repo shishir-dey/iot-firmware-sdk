@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Opaque thread type
 struct iot_thread;
 typedef struct iot_thread iot_thread;
@@ -114,5 +118,9 @@ int iot_mutex_unlock(struct iot_mutex* mutex);
  * @param mutex Mutex handle
  */
 void iot_mutex_destroy(struct iot_mutex* mutex);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // IOT_OS_H

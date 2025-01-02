@@ -3,6 +3,10 @@
 
 #include <sys/types.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Open a connection to a remote host
  *
@@ -39,5 +43,9 @@ int iot_transport_send(void* ctx, const unsigned char* buf, size_t len);
  * @return int Number of bytes received, or error code
  */
 int iot_transport_recv(void* ctx, unsigned char* buf, size_t len);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // IOT_TRANSPORT_H

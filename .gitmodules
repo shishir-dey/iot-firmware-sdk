@@ -8,3 +8,6 @@
 	path = external/mbedtls
 	url = https://github.com/Mbed-TLS/mbedtls.git
 	branch = main
+[submodule "external/googletest"]
+	path = external/googletest
+	url = https://github.com/google/googletest.git

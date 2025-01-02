@@ -4,6 +4,10 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Opaque file handle
 struct iot_file;
 
@@ -38,5 +42,9 @@ struct iot_stat {
 };
 
 int iot_stat(const char* path, struct iot_stat* st);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // IOT_FILESYSTEM_H

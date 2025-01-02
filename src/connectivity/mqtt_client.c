@@ -13,7 +13,7 @@ void coreMQTT_debug(void* ctx, int level, const char* file, int line, const char
 
 static uint32_t coreMQTT_iot_get_time(void)
 {
-    return (uint32_t)iot_get_time_ms();
+    return (uint32_t)iot_get_time(IOT_TIME_MILLISECONDS);
 }
 
 int coreMQTT_iot_transport_send(NetworkContext_t* pNetworkContext, const void* pBuffer, size_t bytesToSend)
