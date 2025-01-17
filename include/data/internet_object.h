@@ -15,7 +15,7 @@ typedef struct {
 // Function declarations
 
 // Create a new IO and initialize an empty JSON object
-IO* io_create();
+IO* io_create(void);
 
 // Destroy the IO, freeing memory
 void io_destroy(IO* obj);

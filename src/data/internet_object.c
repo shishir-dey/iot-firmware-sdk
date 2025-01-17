@@ -5,7 +5,7 @@
 #include <string.h>
 
 // Create a new IO and initialize an empty JSON object
-IO* io_create()
+IO* io_create(void)
 {
     IO* obj = (IO*)malloc(sizeof(IO));
     if (obj != NULL) {

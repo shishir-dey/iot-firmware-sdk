@@ -59,7 +59,7 @@ __attribute__((weak)) void iot_mqtts_message_callback(
 {
 }
 
-int iot_mqtts_init()
+int iot_mqtts_init(void)
 {
     int ret;
 
@@ -234,7 +234,7 @@ int iot_mqtts_connnect(const char* host, int port, const char* client_id, const 
     return 0;
 }
 
-int iot_mqtts_disconnect()
+int iot_mqtts_disconnect(void)
 {
     int ret = MQTT_Disconnect(&client_context.mqtt_context);
     mbedtls_ssl_close_notify(&client_context.ssl_context);
@@ -277,7 +277,7 @@ int iot_mqtts_subscribe(const char* topic, uint8_t qos)
     return MQTT_Subscribe(&client_context.mqtt_context, &subscribe_info, 1, packet_id);
 }
 
-int iot_mqtts_loop()
+int iot_mqtts_loop(void)
 {
     return MQTT_ProcessLoop(&client_context.mqtt_context);
 }

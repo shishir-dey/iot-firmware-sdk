@@ -39,7 +39,7 @@ __attribute__((weak)) void iot_mqtts_message_callback(
  *
  * @return int 0 on success, negative value on error
  */
-int iot_mqtts_init();
+int iot_mqtts_init(void);
 
 /**
  * @brief Connect to the MQTT broker
@@ -59,7 +59,7 @@ int iot_mqtts_connnect(const char* host, int port, const char* client_id, const 
  *
  * @return int 0 on success, negative value on error
  */
-int iot_mqtts_disconnect();
+int iot_mqtts_disconnect(void);
 
 /**
  * @brief Publish a message to an MQTT topic
@@ -110,6 +110,6 @@ int iot_mqtts_set_client_key(const char* key_pem);
  *
  * @return int 0 on success, negative value on error
  */
-int iot_mqtts_loop();
+int iot_mqtts_loop(void);
 
 #endif /* IOT_MQTT_CLIENT_H */
