@@ -1,4 +1,4 @@
-#include "connectivity/mqtt_client.h"
+#include "connectivity/mqtts_client.h"
 #include "interface/clock.h"
 #include "interface/transport.h"
 #include <stdio.h>
