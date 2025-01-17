@@ -27,12 +27,19 @@ typedef struct {
     void* transport_ctx;
 } MQTTClientContext;
 
+__attribute__((weak)) void iot_mqtts_message_callback(
+    const char* topic,
+    size_t topic_length,
+    const uint8_t* payload,
+    size_t payload_length,
+    void* user_context);
+
 /**
  * @brief Initialize the MQTT client
  *
  * @return int 0 on success, negative value on error
  */
-int mqtt_init();
+int iot_mqtts_init();
 
 /**
  * @brief Connect to the MQTT broker
@@ -45,14 +52,14 @@ int mqtt_init();
  * @param private_key Client private key
  * @return int 0 on success, negative value on error
  */
-int mqtt_connect(const char* host, int port, const char* client_id, const char* root_ca, const char* client_cert, const char* private_key);
+int iot_mqtts_connnect(const char* host, int port, const char* client_id, const char* root_ca, const char* client_cert, const char* private_key);
 
 /**
  * @brief Disconnect from the MQTT broker
  *
  * @return int 0 on success, negative value on error
  */
-int mqtt_disconnect();
+int iot_mqtts_disconnect();
 
 /**
  * @brief Publish a message to an MQTT topic
@@ -63,7 +70,7 @@ int mqtt_disconnect();
  * @param qos Quality of Service level (0, 1, or 2)
  * @return int 0 on success, negative value on error
  */
-int mqtt_publish(const char* topic, const uint8_t* payload, size_t payload_length, uint8_t qos);
+int iot_mqtts_publish(const char* topic, const uint8_t* payload, size_t payload_length, uint8_t qos);
 
 /**
  * @brief Subscribe to an MQTT topic
@@ -72,7 +79,7 @@ int mqtt_publish(const char* topic, const uint8_t* payload, size_t payload_lengt
  * @param qos Quality of Service level (0, 1, or 2)
  * @return int 0 on success, negative value on error
  */
-int mqtt_subscribe(const char* topic, uint8_t qos);
+int iot_mqtts_subscribe(const char* topic, uint8_t qos);
 
 /**
  * @brief Set the root CA certificate for SSL/TLS connection
@@ -80,7 +87,7 @@ int mqtt_subscribe(const char* topic, uint8_t qos);
  * @param cert_pem PEM-formatted root CA certificate
  * @return int 0 on success, negative value on error
  */
-int mqtt_set_root_ca(const char* cert_pem);
+int iot_mqtts_set_root_ca(const char* cert_pem);
 
 /**
  * @brief Set the client certificate for SSL/TLS connection
@@ -88,7 +95,7 @@ int mqtt_set_root_ca(const char* cert_pem);
  * @param cert_pem PEM-formatted client certificate
  * @return int 0 on success, negative value on error
  */
-int mqtt_set_client_cert(const char* cert_pem);
+int iot_mqtts_set_client_cert(const char* cert_pem);
 
 /**
  * @brief Set the client private key for SSL/TLS connection
@@ -96,41 +103,13 @@ int mqtt_set_client_cert(const char* cert_pem);
  * @param key_pem PEM-formatted client private key
  * @return int 0 on success, negative value on error
  */
-int mqtt_set_client_key(const char* key_pem);
+int iot_mqtts_set_client_key(const char* key_pem);
 
 /**
  * @brief Process MQTT messages and maintain the connection
  *
  * @return int 0 on success, negative value on error
  */
-int mqtt_process();
-
-/**
- * @brief Portable transport send function for CoreMQTT IoT communications
- *
- * This is a portable implementation that can be used across different platforms.
- * It sends data over the network using the configured transport layer for
- * CoreMQTT communications.
- *
- * @param pNetworkContext Network context containing connection info
- * @param pBuffer Buffer containing data to send
- * @param bytesToSend Number of bytes to send
- * @return int Number of bytes sent on success, negative value on error
- */
-int coreMQTT_iot_transport_send(NetworkContext_t* pNetworkContext, const void* pBuffer, size_t bytesToSend);
-
-/**
- * @brief Portable transport receive function for CoreMQTT IoT communications
- *
- * This is a portable implementation that can be used across different platforms.
- * It receives data from the network using the configured transport layer for
- * CoreMQTT communications.
- *
- * @param pNetworkContext Network context containing connection info
- * @param pBuffer Buffer to store received data
- * @param bytesToRecv Maximum number of bytes to receive
- * @return int Number of bytes received on success, negative value on error
- */
-int coreMQTT_iot_transport_recv(NetworkContext_t* pNetworkContext, void* pBuffer, size_t bytesToRecv);
+int iot_mqtts_loop();
 
 #endif /* IOT_MQTT_CLIENT_H */

@@ -24,7 +24,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Define SDK source files
 set(SDK_SOURCES
     src/data/internet_object.c
-    src/connectivity/mqtt_client.c
+    src/connectivity/mqtts_client.c
 )
 
 # Define the SDK library
