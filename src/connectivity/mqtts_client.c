@@ -6,24 +6,24 @@
 
 static MQTTClientContext client_context;
 
-void coreMQTT_debug(void* ctx, int level, const char* file, int line, const char* str)
+static void mbedtls_debug(void* ctx, int level, const char* file, int line, const char* str)
 {
     printf("%s:%04d: %s", file, line, str);
 }
 
-static uint32_t coreMQTT_iot_get_time(void)
-{
-    return (uint32_t)iot_get_time(IOT_TIME_MILLISECONDS);
-}
-
-int coreMQTT_iot_transport_send(NetworkContext_t* pNetworkContext, const void* pBuffer, size_t bytesToSend)
+static int mbedtls_transport_send(NetworkContext_t* pNetworkContext, const void* pBuffer, size_t bytesToSend)
 {
     return mbedtls_ssl_write(&client_context.ssl_context, pBuffer, bytesToSend);
 }
 
-int coreMQTT_iot_transport_recv(NetworkContext_t* pNetworkContext, void* pBuffer, size_t bytesToRecv)
+static int mbedtls_transport_recv(NetworkContext_t* pNetworkContext, void* pBuffer, size_t bytesToRecv)
 {
     return mbedtls_ssl_read(&client_context.ssl_context, pBuffer, bytesToRecv);
+}
+
+static uint32_t coreMQTT_GetCurrentTime(void)
+{
+    return (uint32_t)iot_get_time(IOT_TIME_MILLISECONDS);
 }
 
 static int check_private_key(mbedtls_pk_context* client_key)
@@ -37,12 +37,29 @@ static int check_private_key(mbedtls_pk_context* client_key)
     return ret;
 }
 
-static void mqtt_event_callback(MQTTContext_t* pMqttContext, MQTTPacketInfo_t* pPacketInfo, MQTTDeserializedInfo_t* pDeserializedInfo)
+static void _mqtts_event_callback(MQTTContext_t* pMqttContext, MQTTPacketInfo_t* pPacketInfo, MQTTDeserializedInfo_t* pDeserializedInfo)
 {
-    // TODO: Implement MQTT event handling
+    if (pPacketInfo->type == MQTT_PACKET_TYPE_PUBLISH) {
+        MQTTPublishInfo_t* pPublishInfo = pDeserializedInfo->pPublishInfo;
+        iot_mqtts_message_callback(
+            pPublishInfo->pTopicName,
+            pPublishInfo->topicNameLength,
+            pPublishInfo->pPayload,
+            pPublishInfo->payloadLength,
+            NULL);
+    }
 }
 
-int mqtt_init()
+__attribute__((weak)) void iot_mqtts_message_callback(
+    const char* topic,
+    size_t topic_length,
+    const uint8_t* payload,
+    size_t payload_length,
+    void* user_context)
+{
+}
+
+int iot_mqtts_init()
 {
     int ret;
 
@@ -53,10 +70,10 @@ int mqtt_init()
     };
 
     transport.pNetworkContext = NULL;
-    transport.send = coreMQTT_iot_transport_send;
-    transport.recv = coreMQTT_iot_transport_recv;
+    transport.send = mbedtls_transport_send;
+    transport.recv = mbedtls_transport_recv;
 
-    ret = MQTT_Init(&client_context.mqtt_context, &transport, coreMQTT_iot_get_time, mqtt_event_callback, &fixed_buffer);
+    ret = MQTT_Init(&client_context.mqtt_context, &transport, coreMQTT_GetCurrentTime, _mqtts_event_callback, &fixed_buffer);
     if (ret != 0) {
         printf("MQTT_Init failed with error: %d\n", ret);
         return ret;
@@ -67,7 +84,7 @@ int mqtt_init()
     return ret;
 }
 
-int mqtt_connect(const char* host, int port, const char* client_id, const char* root_ca, const char* client_cert, const char* private_key)
+int iot_mqtts_connnect(const char* host, int port, const char* client_id, const char* root_ca, const char* client_cert, const char* private_key)
 {
     int ret;
 
@@ -108,7 +125,7 @@ int mqtt_connect(const char* host, int port, const char* client_id, const char* 
         return ret;
     }
 
-    mbedtls_ssl_conf_dbg(&client_context.ssl_config, coreMQTT_debug, NULL);
+    mbedtls_ssl_conf_dbg(&client_context.ssl_config, mbedtls_debug, NULL);
     mbedtls_debug_set_threshold(4);
 
     mbedtls_ssl_conf_min_version(&client_context.ssl_config, MBEDTLS_SSL_MAJOR_VERSION_3, MBEDTLS_SSL_MINOR_VERSION_3);
@@ -217,7 +234,7 @@ int mqtt_connect(const char* host, int port, const char* client_id, const char* 
     return 0;
 }
 
-int mqtt_disconnect()
+int iot_mqtts_disconnect()
 {
     int ret = MQTT_Disconnect(&client_context.mqtt_context);
     mbedtls_ssl_close_notify(&client_context.ssl_context);
@@ -234,7 +251,7 @@ int mqtt_disconnect()
     return ret;
 }
 
-int mqtt_publish(const char* topic, const uint8_t* payload, size_t payload_length, uint8_t qos)
+int iot_mqtts_publish(const char* topic, const uint8_t* payload, size_t payload_length, uint8_t qos)
 {
     MQTTPublishInfo_t publish_info = {
         .qos = qos,
@@ -248,7 +265,7 @@ int mqtt_publish(const char* topic, const uint8_t* payload, size_t payload_lengt
     return MQTT_Publish(&client_context.mqtt_context, &publish_info, packet_id);
 }
 
-int mqtt_subscribe(const char* topic, uint8_t qos)
+int iot_mqtts_subscribe(const char* topic, uint8_t qos)
 {
     MQTTSubscribeInfo_t subscribe_info = {
         .qos = qos,
@@ -260,7 +277,7 @@ int mqtt_subscribe(const char* topic, uint8_t qos)
     return MQTT_Subscribe(&client_context.mqtt_context, &subscribe_info, 1, packet_id);
 }
 
-int mqtt_process()
+int iot_mqtts_loop()
 {
     return MQTT_ProcessLoop(&client_context.mqtt_context);
 }
